@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Current Location</title>
+    <!-- Include Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+      }
+      .container {
+        text-align: center;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 80%;
+        max-width: 600px;
+      }
+      h1 {
+        color: #4caf50;
+      }
+      #map {
+        height: 400px;
+        width: 100%;
+        margin: 20px 0;
+      }
+      .coordinates {
+        font-size: 18px;
+        margin-top: 20px;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Your Order is Confirmed!</h1>
+
+      <!-- Leaflet map -->
+      <div id="map"></div>
+
+      <!-- Track your order button -->
+      <button onclick="trackOrder()">Track Your Order</button>
+    </div>
+
+    <!-- Include Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      // Create a map and set initial view (fallback location)
+      var map = L.map("map").setView([51.505, -0.09], 13); // Default to London
+
+      // Add OpenStreetMap tiles
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      // Function to display the user's location
+      function showUserLocation(position) {
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+
+        // Update map view to the user's location
+        map.setView([lat, lon], 13);
+
+        // Add a marker for user's location
+        L.marker([lat, lon]).addTo(map).bindPopup("You are here").openPopup();
+
+        // Display coordinates on the page
+        document.getElementById("coordinates").innerHTML = `
+                Latitude: ${lat.toFixed(6)}<br>
+                Longitude: ${lon.toFixed(6)}
+            `;
+      }
+
+      // Function to handle geolocation errors
+      function showError(error) {
+        alert("Geolocation failed: " + error.message);
+      }
+
+      // Check if the browser supports geolocation
+      if (navigator.geolocation) {
+        // Get the user's current position
+        navigator.geolocation.getCurrentPosition(showUserLocation, showError);
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+
+      // Simulate tracking order
+      function trackOrder() {
+        alert("Tracking your order...");
+      }
+    </script>
+  </body>
+</html>
